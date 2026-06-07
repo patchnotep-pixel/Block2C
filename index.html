@@ -10,6 +10,10 @@
   #toolbar { display: flex; gap: 10px; margin-bottom: 20px; background: #333; padding: 15px; border-radius: 10px; align-items: center; flex-wrap: wrap; }
   button, select { padding: 10px 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s; }
   select { background-color: #444; color: white; border: 1px solid #555; }
+  
+  #btn-lang { background-color: #4b5563; color: white; }
+  #btn-lang:hover { background-color: #374151; }
+  
   #btn-start { background-color: #10b981; color: white; }
   #btn-start:hover { background-color: #059669; }
   #btn-pause { background-color: #f59e0b; color: white; }
@@ -59,47 +63,49 @@
 <body>
 
   <div id="toolbar">
+    <button id="btn-lang" onclick="toggleLanguage()">🌐 English</button>
+    
     <select id="template-select" onchange="loadTemplate()">
-      <option value="">📂 예제 템플릿 선택</option>
-      <option value="helloworld">1. C 기본 Hello World</option>
-      <option value="loop_sum">2. 반복문으로 1~10 더하기</option>
-      <option value="os_vga">3. OS 비디오 메모리 제어(커널)</option>
+      <option value="" data-ko="📂 예제 템플릿 선택" data-en="📂 Select Example Template">📂 예제 템플릿 선택</option>
+      <option value="helloworld" data-ko="1. C 기본 Hello World" data-en="1. Basic C Hello World">1. C 기본 Hello World</option>
+      <option value="loop_sum" data-ko="2. 반복문으로 1~10 더하기" data-en="2. Add 1~10 using Loop">2. 반복문으로 1~10 더하기</option>
+      <option value="os_vga" data-ko="3. OS 비디오 메모리 제어(커널)" data-en="3. OS Video Memory Control (Kernel)">3. OS 비디오 메모리 제어(커널)</option>
     </select>
 
-    <button id="btn-start" onclick="startCode()">▶ 시작 / 부팅</button>
-    <button id="btn-pause" onclick="pauseCode()">⏸ 일시 정지</button>
-    <button id="btn-stop" onclick="stopCode()">⏹ 멈춤</button>
+    <button id="btn-start" onclick="startCode()" data-ko="▶ 시작 / 부팅" data-en="▶ Start / Boot">▶ 시작 / 부팅</button>
+    <button id="btn-pause" onclick="pauseCode()" data-ko="⏸ 일시 정지" data-en="⏸ Pause">⏸ 일시 정지</button>
+    <button id="btn-stop" onclick="stopCode()" data-ko="⏹ 멈춤" data-en="⏹ Stop">⏹ 멈춤</button>
     
-    <button id="btn-save-ws" onclick="exportWorkspace()">💾 블록 저장 (.B2C)</button>
-    <button id="btn-load-ws" onclick="document.getElementById('file-input').click()">📂 블록 불러오기 (.B2C)</button>
+    <button id="btn-save-ws" onclick="exportWorkspace()" data-ko="💾 블록 저장 (.B2C)" data-en="💾 Save Blocks (.B2C)">💾 블록 저장 (.B2C)</button>
+    <button id="btn-load-ws" onclick="document.getElementById('file-input').click()" data-ko="📂 블록 불러오기 (.B2C)" data-en="📂 Load Blocks (.B2C)">📂 블록 불러오기 (.B2C)</button>
     <input type="file" id="file-input" style="display:none" accept=".B2C" onchange="importWorkspace(event)">
 
-    <button id="btn-export" onclick="exportCode()">💾 C 코드(.c) 내보내기</button>
+    <button id="btn-export" onclick="exportCode()" data-ko="💾 C 코드(.c) 내보내기" data-en="💾 Export C Code (.c)">💾 C 코드(.c) 내보내기</button>
   </div>
 
   <div id="main">
     <div id="palette">
-      <div class="category-title">기본 구조 & 자료형</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="표준 입출력 라이브러리를 포함시킵니다.">#include &lt;stdio.h&gt;</div>
-      <div class="block type" draggable="true" data-type="type" title="정수형 변수 타입">int</div>
-      <div class="block type" draggable="true" data-type="type" title="실수형 변수 타입">float</div>
-      <div class="block type" draggable="true" data-type="type" title="문자형 변수 타입">char</div>
-      <div class="block type" draggable="true" data-type="type" title="반환값이 없는 타입">void</div>
+      <div class="category-title" data-ko="기본 구조 & 자료형" data-en="Basic Structure & Types">기본 구조 & 자료형</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="표준 입출력 라이브러리를 포함시킵니다." data-title-en="Includes the standard input/output library.">#include &lt;stdio.h&gt;</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="정수형 변수 타입" data-title-en="Integer variable type">int</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="실수형 변수 타입" data-title-en="Float variable type">float</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="문자형 변수 타입" data-title-en="Character variable type">char</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="반환값이 없는 타입" data-title-en="Type with no return value">void</div>
       
-      <div class="category-title">제어문 (조건/반복)</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="조건문 시작">if</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="조건문 외 나머지">else</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="횟수 지정 반복문">for</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="조건 만족 시 반복문">while</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="값 반환 및 함수 종료">return</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="반복문 강제 탈출">break</div>
+      <div class="category-title" data-ko="제어문 (조건/반복)" data-en="Control Flow (Condition/Loop)">제어문 (조건/반복)</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="조건문 시작" data-title-en="Start of conditional statement">if</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="조건문 외 나머지" data-title-en="Else statement">else</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="횟수 지정 반복문" data-title-en="Loop with specified iterations">for</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="조건 만족 시 반복문" data-title-en="Loop while condition is met">while</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="값 반환 및 함수 종료" data-title-en="Return value and exit function">return</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="반복문 강제 탈출" data-title-en="Break out of loop">break</div>
       
-      <div class="category-title">함수</div>
-      <div class="block func" draggable="true" data-type="func" title="C 프로그램의 메인 시작 지점">main</div>
-      <div class="block func" draggable="true" data-type="func" title="화면 출력 함수">printf</div>
-      <div class="block func" draggable="true" data-type="func" title="값 입력 함수">scanf</div>
+      <div class="category-title" data-ko="함수" data-en="Functions">함수</div>
+      <div class="block func" draggable="true" data-type="func" data-title-ko="C 프로그램의 메인 시작 지점" data-title-en="Main entry point of C program">main</div>
+      <div class="block func" draggable="true" data-type="func" data-title-ko="화면 출력 함수" data-title-en="Screen output function">printf</div>
+      <div class="block func" draggable="true" data-type="func" data-title-ko="값 입력 함수" data-title-en="Value input function">scanf</div>
       
-      <div class="category-title">기호 (문법)</div>
+      <div class="category-title" data-ko="기호 (문법)" data-en="Symbols (Syntax)">기호 (문법)</div>
       <div class="block symbol" draggable="true" data-type="symbol">(</div>
       <div class="block symbol" draggable="true" data-type="symbol">)</div>
       <div class="block symbol" draggable="true" data-type="symbol">{</div>
@@ -108,38 +114,38 @@
       <div class="block symbol" draggable="true" data-type="symbol">,</div>
       <div class="block symbol" draggable="true" data-type="symbol">&amp;</div>
       
-      <div class="category-title">연산자</div>
-      <div class="block op" draggable="true" data-type="op" title="대입 연산자">=</div>
+      <div class="category-title" data-ko="연산자" data-en="Operators">연산자</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="대입 연산자" data-title-en="Assignment operator">=</div>
       <div class="block op" draggable="true" data-type="op">+</div>
       <div class="block op" draggable="true" data-type="op">-</div>
       <div class="block op" draggable="true" data-type="op">*</div>
       <div class="block op" draggable="true" data-type="op">/</div>
-      <div class="block op" draggable="true" data-type="op" title="같은지 비교">==</div>
-      <div class="block op" draggable="true" data-type="op" title="다른지 비교">!=</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="같은지 비교" data-title-en="Equal to">==</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="다른지 비교" data-title-en="Not equal to">!=</div>
       <div class="block op" draggable="true" data-type="op">&lt;</div>
       <div class="block op" draggable="true" data-type="op">&gt;</div>
-      <div class="block op" draggable="true" data-type="op" title="1 증가">++</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="1 증가" data-title-en="Increment by 1">++</div>
 
-      <div class="category-title">OS 및 로우레벨 제어</div>
-      <div class="block os" draggable="true" data-type="os" title="컴파일러 최적화 방지">volatile</div>
-      <div class="block os" draggable="true" data-type="os" title="인라인 어셈블리 실행">__asm__</div>
-      <div class="block os" draggable="true" data-type="os" title="어셈블리 최적화 방지">__volatile__</div>
-      <div class="block os" draggable="true" data-type="os" title="인라인 함수 정의">inline</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="구조체 정의">struct</div>
-      <div class="block keyword" draggable="true" data-type="keyword" title="타입 별칭 정의">typedef</div>
-      <div class="block type" draggable="true" data-type="type" title="부호 없는 8비트 정수">uint8_t</div>
-      <div class="block type" draggable="true" data-type="type" title="부호 없는 16비트 정수">uint16_t</div>
-      <div class="block type" draggable="true" data-type="type" title="부호 없는 32비트 정수">uint32_t</div>
-      <div class="block type" draggable="true" data-type="type" title="주소 크기 자료형">size_t</div>
-      <div class="block op" draggable="true" data-type="op" title="포인터 역참조 또는 선언">*</div>
-      <div class="block op" draggable="true" data-type="op" title="구조체 포인터 멤버 접근">-&gt;</div>
-      <div class="block op" draggable="true" data-type="op" title="비트 왼쪽 시프트">&lt;&lt;</div>
-      <div class="block op" draggable="true" data-type="op" title="비트 오른쪽 시프트">&gt;&gt;</div>
-      <div class="block op" draggable="true" data-type="op" title="비트 AND">&amp;</div>
-      <div class="block op" draggable="true" data-type="op" title="비트 OR">|</div>
-      <div class="block op" draggable="true" data-type="op" title="비트 NOT">~</div>
+      <div class="category-title" data-ko="OS 및 로우레벨 제어" data-en="OS & Low-level Control">OS 및 로우레벨 제어</div>
+      <div class="block os" draggable="true" data-type="os" data-title-ko="컴파일러 최적화 방지" data-title-en="Prevent compiler optimization">volatile</div>
+      <div class="block os" draggable="true" data-type="os" data-title-ko="인라인 어셈블리 실행" data-title-en="Execute inline assembly">__asm__</div>
+      <div class="block os" draggable="true" data-type="os" data-title-ko="어셈블리 최적화 방지" data-title-en="Prevent assembly optimization">__volatile__</div>
+      <div class="block os" draggable="true" data-type="os" data-title-ko="인라인 함수 정의" data-title-en="Define inline function">inline</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="구조체 정의" data-title-en="Define structure">struct</div>
+      <div class="block keyword" draggable="true" data-type="keyword" data-title-ko="타입 별칭 정의" data-title-en="Define type alias">typedef</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="부호 없는 8비트 정수" data-title-en="Unsigned 8-bit integer">uint8_t</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="부호 없는 16비트 정수" data-title-en="Unsigned 16-bit integer">uint16_t</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="부호 없는 32비트 정수" data-title-en="Unsigned 32-bit integer">uint32_t</div>
+      <div class="block type" draggable="true" data-type="type" data-title-ko="주소 크기 자료형" data-title-en="Address size data type">size_t</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="포인터 역참조 또는 선언" data-title-en="Pointer dereference or declaration">*</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="구조체 포인터 멤버 접근" data-title-en="Access structure pointer member">-&gt;</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="비트 왼쪽 시프트" data-title-en="Bitwise left shift">&lt;&lt;</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="비트 오른쪽 시프트" data-title-en="Bitwise right shift">&gt;&gt;</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="비트 AND" data-title-en="Bitwise AND">&amp;</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="비트 OR" data-title-en="Bitwise OR">|</div>
+      <div class="block op" draggable="true" data-type="op" data-title-ko="비트 NOT" data-title-en="Bitwise NOT">~</div>
 
-      <div class="category-title">변수 & 값</div>
+      <div class="category-title" data-ko="변수 & 값" data-en="Variables & Values">변수 & 값</div>
       <div class="block var" draggable="true" data-type="var">x</div>
       <div class="block var" draggable="true" data-type="var">y</div>
       <div class="block var" draggable="true" data-type="var">i</div>
@@ -150,7 +156,7 @@
       <div class="block number" draggable="true" data-type="number">1</div>
       <div class="block number" draggable="true" data-type="number">5</div>
       <div class="block number" draggable="true" data-type="number">10</div>
-      <div class="block number" draggable="true" data-type="number" title="VGA 비디오 메모리 주소">0xB8000</div>
+      <div class="block number" draggable="true" data-type="number" data-title-ko="VGA 비디오 메모리 주소" data-title-en="VGA video memory address">0xB8000</div>
       <div class="block number" draggable="true" data-type="number">0x1000</div>
       <div class="block number" draggable="true" data-type="number">NULL</div>
       <div class="block string" draggable="true" data-type="string">"Hello, World!\n"</div>
@@ -162,24 +168,26 @@
 
     <div id="right-panel">
       <div class="panel-box">
-        <h3>📝 생성된 코드</h3>
+        <h3 data-ko="📝 생성된 코드" data-en="📝 Generated Code">📝 생성된 코드</h3>
         <pre id="code-view"></pre>
       </div>
       <div class="panel-box">
-        <h3>💻 모니터 / 가상 부팅 시뮬레이터</h3>
-        <pre id="console-output">대기 중...</pre>
+        <h3 data-ko="💻 모니터 / 가상 부팅 시뮬레이터" data-en="💻 Monitor / Virtual Boot Simulator">💻 모니터 / 가상 부팅 시뮬레이터</h3>
+        <pre id="console-output" data-ko="대기 중..." data-en="Waiting...">대기 중...</pre>
       </div>
     </div>
   </div>
   
-  <div class="instruction">💡 상단에서 템플릿을 선택하시면 완성된 코드가 자동으로 조립됩니다!</div>
+  <div class="instruction" data-ko="💡 상단에서 템플릿을 선택하시면 완성된 코드가 자동으로 조립됩니다!" data-en="💡 Select a template at the top to automatically assemble the code!">💡 상단에서 템플릿을 선택하시면 완성된 코드가 자동으로 조립됩니다!</div>
 
   <script>
+    let currentLang = 'ko';
+
     const templates = {
       helloworld: [
-        { text: "#include <stdio.h>", class: "block keyword", title: "표준 입출력 라이브러리" },
-        { text: "int", class: "block type", title: "정수형" },
-        { text: "main", class: "block func", title: "메인 함수" },
+        { text: "#include <stdio.h>", class: "block keyword", titleKo: "표준 입출력 라이브러리", titleEn: "Standard I/O Library" },
+        { text: "int", class: "block type", titleKo: "정수형", titleEn: "Integer type" },
+        { text: "main", class: "block func", titleKo: "메인 함수", titleEn: "Main function" },
         { text: "(", class: "block symbol" }, { text: ")", class: "block symbol" },
         { text: "{", class: "block symbol" },
         { text: "printf", class: "block func" }, { text: "(", class: "block symbol" },
@@ -209,6 +217,30 @@
       ]
     };
 
+    function toggleLanguage() {
+      currentLang = currentLang === 'ko' ? 'en' : 'ko';
+      
+      const btnLang = document.getElementById('btn-lang');
+      btnLang.innerText = currentLang === 'ko' ? '🌐 English' : '🌐 한국어';
+
+      document.querySelectorAll('[data-ko]').forEach(el => {
+        if (el.id === 'console-output' && runState !== 'idle') return;
+        el.textContent = currentLang === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+      });
+
+      document.querySelectorAll('[data-title-ko]').forEach(el => {
+        el.setAttribute('title', currentLang === 'ko' ? el.getAttribute('data-title-ko') : el.getAttribute('data-title-en'));
+      });
+
+      document.querySelectorAll('#workspace .block').forEach(block => {
+        const tKo = block.getAttribute('data-title-ko');
+        const tEn = block.getAttribute('data-title-en');
+        if (tKo || tEn) {
+          block.setAttribute('title', currentLang === 'ko' ? (tKo || "") : (tEn || ""));
+        }
+      });
+    }
+
     function loadTemplate() {
       const select = document.getElementById('template-select');
       const val = select.value;
@@ -218,17 +250,22 @@
       workspace.innerHTML = ""; 
 
       templates[val].forEach(item => {
-        createBlockInWorkspace(item.text, item.class, item.title);
+        createBlockInWorkspace(item.text, item.class, item.titleKo, item.titleEn);
       });
       updateCodeView();
     }
 
-    function createBlockInWorkspace(text, className, title) {
+    function createBlockInWorkspace(text, className, titleKo, titleEn) {
       const workspace = document.getElementById('workspace');
       const block = document.createElement('div');
       block.className = className;
       block.innerText = text;
-      if (title) block.setAttribute('title', title);
+      
+      if (titleKo) block.setAttribute('data-title-ko', titleKo);
+      if (titleEn) block.setAttribute('data-title-en', titleEn);
+      
+      const currentTitle = currentLang === 'ko' ? titleKo : titleEn;
+      if (currentTitle) block.setAttribute('title', currentTitle);
       
       block.addEventListener('dblclick', function() {
         this.remove();
@@ -238,13 +275,14 @@
       workspace.appendChild(block);
     }
 
-    let draggedData = null, draggedClass = null, draggedTitle = null;
+    let draggedData = null, draggedClass = null, draggedTitleKo = null, draggedTitleEn = null;
 
     document.querySelectorAll('#palette .block').forEach(block => {
       block.addEventListener('dragstart', function(e) {
         draggedData = e.target.innerText;
         draggedClass = e.target.className;
-        draggedTitle = e.target.getAttribute('title');
+        draggedTitleKo = e.target.getAttribute('data-title-ko');
+        draggedTitleEn = e.target.getAttribute('data-title-en');
       });
     });
 
@@ -253,9 +291,9 @@
     function drop(e) {
       e.preventDefault();
       if (!draggedData) return;
-      createBlockInWorkspace(draggedData, draggedClass, draggedTitle);
+      createBlockInWorkspace(draggedData, draggedClass, draggedTitleKo, draggedTitleEn);
       updateCodeView();
-      draggedData = null; draggedTitle = null;
+      draggedData = null; draggedTitleKo = null; draggedTitleEn = null;
     }
 
     function updateCodeView() {
@@ -284,12 +322,13 @@
         blockData.push({
           text: block.innerText,
           class: block.className,
-          title: block.getAttribute('title') || ""
+          titleKo: block.getAttribute('data-title-ko') || "",
+          titleEn: block.getAttribute('data-title-en') || ""
         });
       });
       
       if (blockData.length === 0) {
-        alert("저장할 블록이 없습니다! 먼저 블록을 조립해 주세요.");
+        alert(currentLang === 'ko' ? "저장할 블록이 없습니다! 먼저 블록을 조립해 주세요." : "There are no blocks to save! Please assemble blocks first.");
         return;
       }
       
@@ -318,13 +357,13 @@
           workspace.innerHTML = ""; 
           
           data.forEach(item => {
-            createBlockInWorkspace(item.text, item.class, item.title);
+            createBlockInWorkspace(item.text, item.class, item.titleKo, item.titleEn);
           });
           
           updateCodeView();
-          alert("Block2C (.B2C) 프로젝트를 성공적으로 불러왔습니다!");
+          alert(currentLang === 'ko' ? "Block2C (.B2C) 프로젝트를 성공적으로 불러왔습니다!" : "Successfully loaded Block2C (.B2C) project!");
         } catch (err) {
-          alert("올바른 Block2C 파일(.B2C)이 아닙니다!");
+          alert(currentLang === 'ko' ? "올바른 Block2C 파일(.B2C)이 아닙니다!" : "Invalid Block2C file (.B2C)!");
         }
         event.target.value = ''; 
       };
@@ -340,19 +379,19 @@
       const code = document.getElementById('code-view').innerText;
       
       if (code.includes("kernel_main") || code.includes("0xB8000")) {
-        consoleOut.innerText = "🤖 가상 QEMU 머신 커널 부팅 중...\n";
+        consoleOut.innerText = currentLang === 'ko' ? "🤖 가상 QEMU 머신 커널 부팅 중...\n" : "🤖 Booting virtual QEMU machine kernel...\n";
         runState = 'running';
         runTimer = setTimeout(() => {
-          consoleOut.innerText += "[OK] 커널 로드 완료. 보호 모드 진입.\n";
+          consoleOut.innerText += currentLang === 'ko' ? "[OK] 커널 로드 완료. 보호 모드 진입.\n" : "[OK] Kernel loaded. Entering protected mode.\n";
           runTimer = setTimeout(() => {
-            consoleOut.innerText += "\n🎨 [OS 실행 성공] VGA 메모리에 직접 텍스트를 출력했습니다.\nKernel Mode Active.";
+            consoleOut.innerText += currentLang === 'ko' ? "\n🎨 [OS 실행 성공] VGA 메모리에 직접 텍스트를 출력했습니다.\nKernel Mode Active." : "\n🎨 [OS Execution Successful] Directly output text to VGA memory.\nKernel Mode Active.";
             runState = 'idle';
           }, 800);
         }, 800);
       } else {
-        consoleOut.innerText = "▶ 컴파일 및 프로그램 실행...\n";
+        consoleOut.innerText = currentLang === 'ko' ? "▶ 컴파일 및 프로그램 실행...\n" : "▶ Compiling and executing program...\n";
         if (!code.includes("main")) {
-          consoleOut.innerText += "❌ 오류: main 함수가 없습니다.\n";
+          consoleOut.innerText += currentLang === 'ko' ? "❌ 오류: main 함수가 없습니다.\n" : "❌ Error: Missing main function.\n";
           return;
         }
         runState = 'running';
@@ -362,7 +401,7 @@
           } else {
             consoleOut.innerText += "Hello, World!\n";
           }
-          consoleOut.innerText += "\n⏹ 프로그램 종료됨 (return 0).";
+          consoleOut.innerText += currentLang === 'ko' ? "\n⏹ 프로그램 종료됨 (return 0)." : "\n⏹ Program terminated (return 0).";
           runState = 'idle';
         }, 800);
       }
@@ -372,19 +411,19 @@
       if (runState === 'running') {
         runState = 'paused';
         clearTimeout(runTimer);
-        document.getElementById('console-output').innerText += "\n⏸ 시뮬레이션 일시 정지됨.";
+        document.getElementById('console-output').innerText += currentLang === 'ko' ? "\n⏸ 시뮬레이션 일시 정지됨." : "\n⏸ Simulation paused.";
       }
     }
 
     function stopCode() {
       runState = 'idle';
       clearTimeout(runTimer);
-      document.getElementById('console-output').innerText += "\n⏹ 시뮬레이션 종료/중지됨.";
+      document.getElementById('console-output').innerText += currentLang === 'ko' ? "\n⏹ 시뮬레이션 종료/중지됨." : "\n⏹ Simulation ended/stopped.";
     }
 
     function exportCode() {
       const code = document.getElementById('code-view').innerText;
-      if (!code.trim()) { alert("블록을 먼저 조립해 주세요!"); return; }
+      if (!code.trim()) { alert(currentLang === 'ko' ? "블록을 먼저 조립해 주세요!" : "Please assemble blocks first!"); return; }
       
       const isKernel = code.includes("kernel_main");
       const blob = new Blob([code], { type: 'text/plain' });
